@@ -1,9 +1,13 @@
-name: Build-OpenWrt 4019
+name: Build OpenWrt 4019
 
-on:
+on: 
+  release:
+    types: [published]
   push:
     branches: 
       - master
+    paths:
+      - '.config4019'
 #  schedule:
 #    - cron: 0 8 * * 5
 #  watch:
@@ -12,52 +16,79 @@ on:
 jobs:
   build:
     runs-on: ubuntu-18.04
-    
+
     steps:
-    - name: Clone Repository
-      uses: actions/checkout@v1
-    - name: Init build dependencies
+    - name: Checkout
+      uses: actions/checkout@master
+
+    - name: Initialization environment
       env:
         DEBIAN_FRONTEND: noninteractive
       run: |
-        docker rmi $(docker images -q)
-        sudo -E apt-get remove -y --purge azure-cli ghc zulu* hhvm llvm* firefox google* dotnet* powershell openjdk* mysql* php*
-        sudo -E apt-get update -y
-        sudo -E apt-get full-upgrade -y
-        sudo -E apt-get install -y build-essential asciidoc binutils bzip2 gawk gettext git libncurses5-dev libz-dev patch unzip zlib1g-dev lib32gcc1 libc6-dev-i386 subversion flex uglifyjs git-core gcc-8 gcc++-8 gcc-8-multilib g++-8-multilib p7zip p7zip-full msmtp libssl-dev texinfo libreadline-dev libglib2.0-dev xmlto qemu-utils upx libelf-dev autoconf automake libtool autopoint ccache curl wget vim nano python python3 python-pip python3-pip python-ply python3-ply haveged lrzsz device-tree-compiler
-        sudo -E apt-get autoremove -y --purge
-        sudo -E apt-get clean -y
-        sudo -E rm -rf /usr/share/dotnet /etc/mysql /etc/php
-    - name: Clone source
+        docker rmi `docker images -q`
+        echo "Deleting files, please wait ..."
+        sudo rm -rf \
+          /usr/share/dotnet \
+          /etc/mysql \
+          /etc/php
+        sudo -E apt-get -y purge \
+          azure-cli \
+          ghc* \
+          zulu* \
+          hhvm \
+          llvm* \
+          firefox \
+          google* \
+          dotnet* \
+          powershell \
+          openjdk* \
+          mysql* \
+          php*
+        sudo -E apt-get update
+        sudo -E apt-get -y install build-essential asciidoc binutils bzip2 gawk gettext git libncurses5-dev libz-dev patch unzip zlib1g-dev lib32gcc1 libc6-dev-i386 subversion flex uglifyjs git-core gcc-multilib p7zip p7zip-full msmtp libssl-dev texinfo libglib2.0-dev xmlto qemu-utils upx libelf-dev autoconf automake libtool autopoint device-tree-compiler
+        sudo -E apt-get -y autoremove --purge
+        sudo -E apt-get clean
+    - name: Clone source code
+      env: 
+        REPO_URL: https://github.com/project-openwrt/
+        REPO_BRANCH: master
+      run: git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
+
+    - name: Update feeds
+      run: cd openwrt && ./scripts/feeds update -a
+
+    - name: Install feeds
+      run: cd openwrt && ./scripts/feeds install -a
+
+    - name: Load custom configuration
+      env:
+        CONFIG_FILE: '.config4019'
+        DIY_SH: 'diy.sh'
       run: |
-        cd /home/runner
-        git clone https://github.com/project-openwrt/openwrt.git
-        sudo chown -R runner:runner openwrt
-        cd /home/runner/openwrt
-        ./scripts/feeds update -a 
-        ./scripts/feeds install -a
-    - name: Before Build
+        [ -e files ] && mv files openwrt/files
+        [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
+        chmod +x $DIY_SH
+        cd openwrt
+        ../$DIY_SH
+        make defconfig
+    - name: Download package
       run: |
-        /bin/bash /home/runner/work/build-openwrt/build-openwrt/before_build.sh
-        cp -fpR /home/runner/work/build-openwrt/build-openwrt/. /home/runner/openwrt/
-    - name: Start Build
-      run: | 
-        cd /home/runner/openwrt
-        let make_process=$(nproc)+1
-        mv .config4019 .config_default
-        rm -f .config.old
-        config_names="$(ls .config4019*)"
-        for i in $config_names;do mv -f $i .config; make defconfig; make -j${make_process}; rm -rf build_dir/target* build_dir/toolchain* staging_dir/target* staging_dir/toolchain*; done
-    - name: After Build
+        cd openwrt && make download -j8
+        find dl -size -1024c -exec ls -l {} \;
+        find dl -size -1024c -exec rm -f {} \;
+    - name: Build
       run: |
-        /bin/bash /home/runner/openwrt/after_build.sh
-    - name: Upload Packages
+        cd openwrt
+        echo -e "$(nproc) thread build."
+        make -j$(nproc) V=s
+    - name : Upload packages
       uses: actions/upload-artifact@master
       with:
-        name: Packages
-        path: /home/runner/openwrt/bin/packages/
-    - name: Upload Firmwares
+        name: OpenWrt packages
+        path: openwrt/bin/packages
+
+    - name : Upload targets
       uses: actions/upload-artifact@master
       with:
-        name: Firmwares
-        path: /home/runner/openwrt/bin/targets/
+        name: OpenWrt firmware
+        path: openwrt/bin/targets
