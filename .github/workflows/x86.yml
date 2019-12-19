@@ -1,4 +1,4 @@
-name: Build OpenWrt 4019
+name: Build OpenWrt X86
 
 on: 
   release:
