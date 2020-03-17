@@ -104,10 +104,11 @@ jobs:
         rm -rf packages
         echo "::set-env name=FIRMWARE::$PWD"
         echo "::set-output name=status::success"
-  
-    - name: Upload Combined VMware Image
+        
+    - name: Upload firmware directory
       uses: actions/upload-artifact@master
-      if: steps.compile.outputs.status == 'success'
+      if: steps.organize.outputs.status == 'success' && !cancelled()
       with:
-        name: ${{ env.DEVICE }}-combined-squashfs.vmdk
-        path: openwrt/bin/targets/${{ env.TARGET }}/${{ env.SUBTARGET }}/${{ env.DEVICE }}-combined-squashfs.vmdk
+        name: OpenWrt_firmware
+        path: ${{ en v.FIRMWARE }}
+    
