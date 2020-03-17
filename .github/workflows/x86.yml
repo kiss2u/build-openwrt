@@ -30,6 +30,9 @@ env:
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
   TZ: Asia/Shanghai
+  TARGET: x86
+  SUBTARGET: 64
+  DEVICE: openwrt-x86-64
 
 jobs:
   build:
