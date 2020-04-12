@@ -24,7 +24,7 @@ on:
 env:
   REPO_URL: https://github.com/project-openwrt/openwrt
   REPO_BRANCH: openwrt-19.07
-  CONFIG_FILE: .config4019
+  CONFIG_FILE: .config1907
   DIY_SH: diy.sh
   DOWNLOAD_URL_FILE: Tmp-Link-Url.txt
   TZ: Asia/Shanghai
