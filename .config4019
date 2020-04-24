@@ -16,8 +16,6 @@ CONFIG_PACKAGE_kmod-usb2=y
 
 CONFIG_PACKAGE_openssh-sftp-server=y
 CONFIG_PACKAGE_acme-dnsapi=y
-CONFIG_PACKAGE_knot-dig=y
-CONFIG_PACKAGE_knot-tests=y
 CONFIG_PACKAGE_kmod-nls-cp936=y
 CONFIG_PACKAGE_kmod-nls-cp950=y
 CONFIG_PACKAGE_luci-ssl-openssl=y
@@ -40,7 +38,7 @@ CONFIG_PACKAGE_luci-app-verysync=y
 CONFIG_PACKAGE_luci-app-wrtbwmon=y
 CONFIG_PACKAGE_luci-app-ipsec-vpnd is not set
 CONFIG_PACKAGE_luci-app-uhttpd=y
-CONFIG_PACKAGE_luci-app-unbound=y
+# CONFIG_PACKAGE_luci-app-unbound=y
 # CONFIG_PACKAGE_luci-app-wol is not set
 # CONFIG_PACKAGE_luci-app-zerotier is not set
 # CONFIG_PACKAGE_luci-app-diskman_INCLUDE_btrfs_progs is not set
