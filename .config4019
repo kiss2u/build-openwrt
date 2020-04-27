@@ -21,6 +21,7 @@ CONFIG_PACKAGE_kmod-nls-cp950=y
 CONFIG_PACKAGE_luci-ssl-openssl=y
 
 CONFIG_PACKAGE_luci-app-acme=y
+CONFIG_PACKAGE_luci-app-syncthing=y
 CONFIG_PACKAGE_luci-app-adguardhome=y
 # CONFIG_PACKAGE_luci-app-amule is not set
 CONFIG_PACKAGE_luci-app-aria2=y
