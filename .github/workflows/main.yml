@@ -37,7 +37,7 @@ jobs:
     - name: Clone Source
       run: |
         cd /home/runner
-        bash ${GITHUB_WORKSPACE}/clone_source.sh
+        git clone https://github.com/project-openwrt/openwrt
         sudo chown -R runner:runner openwrt
     - name: Before Build
       run: |
