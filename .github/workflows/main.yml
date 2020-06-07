@@ -3,13 +3,13 @@ name: Build-OpenWrt
 on:
   push:
     branches: 
-      - openwrt-18.06
+      - master
 #  release:
 #    types: published
-  schedule:
-    - cron: 0 16 * * 5
-  watch:
-    types: started
+#  schedule:
+#    - cron: 0 8 * * 5
+#  watch:
+#    types: started
 #  repository_dispatch:
 
 jobs:
@@ -37,13 +37,12 @@ jobs:
     - name: Clone Source
       run: |
         cd /home/runner
-        git clone https://github.com/project-openwrt/openwrt
+        bash ${GITHUB_WORKSPACE}/clone_source.sh
         sudo chown -R runner:runner openwrt
     - name: Before Build
       run: |
         /bin/bash ${GITHUB_WORKSPACE}/before_build.sh
         cp -fpR ${GITHUB_WORKSPACE}/. /home/runner/openwrt/
-
 #    - name: SSH connection to Actions
 #      uses: csexton/debugger-action@master
 
