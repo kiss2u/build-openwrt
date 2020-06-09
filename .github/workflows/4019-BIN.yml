@@ -27,7 +27,7 @@ env:
   CONFIG_FILE: .config4019
   DIY_SH: diy.sh
   DOWNLOAD_URL_FILE: Tmp-Link-Url.txt
-  TZ: Asia/Shanghai
+  TZ: Asia/Taipei
   TARGET: ipq40xx
   SUBTARGET: generic
   DEVICE: openwrt-ipq40xx-asus_rt-acrh17
@@ -38,7 +38,7 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
 
     steps:
     - name: Checkout
@@ -48,11 +48,9 @@ jobs:
       env:
         DEBIAN_FRONTEND: noninteractive
       run: |
-        sudo swapoff /swapfile
-        sudo rm -rf /swapfile /etc/apt/sources.list.d/*
+        sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
         sudo -E apt-get -qq update
-        sudo -E apt-get -qq install build-essential asciidoc binutils bzip2 gawk gettext git libncurses5-dev libz-dev patch unzip zlib1g-dev lib32gcc1 libc6-dev-i386 subversion flex uglifyjs git-core gcc-multilib g++-multilib p7zip p7zip-full msmtp libssl-dev texinfo libglib2.0-dev xmlto qemu-utils upx libelf-dev autoconf automake libtool autopoint device-tree-compiler scons antlr3 gperf ecj fastjar mkisofs 
-        curl -fsSL https://raw.githubusercontent.com/P3TERX/dotfiles/master/.bashrc >> ~/.bashrc
+        sudo -E apt-get -qq install $(curl -fsSL git.io/depends-ubuntu-1804)
     - name: Free up disk space
       if: env.FREE_UP_DISK == 'true'
       env:
