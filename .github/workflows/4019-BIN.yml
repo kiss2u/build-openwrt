@@ -31,7 +31,6 @@ env:
   TARGET: ipq40xx
   SUBTARGET: generic
   DEVICE: openwrt-ipq40xx-asus_rt-acrh17
-  FREE_UP_DISK: true
   SSH_ACTIONS: false
   UPLOAD_TMP_LINK: true
 
@@ -39,6 +38,7 @@ env:
 jobs:
   build:
     runs-on: ubuntu-18.04
+    if: github.event.repository.owner.id == github.event.sender.id
 
     steps:
     - name: Checkout
@@ -51,26 +51,26 @@ jobs:
         sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
         sudo -E apt-get -qq update
         sudo -E apt-get -qq install $(curl -fsSL git.io/depends-ubuntu-1804)
-    - name: Free up disk space
-      if: env.FREE_UP_DISK == 'true'
-      env:
-        DEBIAN_FRONTEND: noninteractive
-      run: |
-        sudo rm -rf /usr/share/dotnet
-        docker rmi `docker images -q`
-        sudo -E apt-get -q purge azure-cli ghc* zulu* hhvm llvm* firefox google* dotnet* powershell mysql* php*
         sudo -E apt-get -qq autoremove --purge
         sudo -E apt-get -qq clean
-    - name: Clone source code
-      run: git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
-
+        sudo timedatectl set-timezone "$TZ"
+    
+    - name: Clone Source Code
+      run: |
+        df -hT $PWD
+        git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt    
+     
     - name: Update Feeds
       run: |
-       cd openwrt
-       ./scripts/feeds update -a
-    - name: Install feeds
-      run: cd openwrt && ./scripts/feeds install -a
-
+        cd openwrt
+        echo "::set-env name=OPENWRTROOT::$PWD"
+        ./scripts/feeds update -a
+        
+    - name: Install Feeds
+      run: |
+        cd $OPENWRTROOT
+        ./scripts/feeds install -a
+    
     - name: Load custom configuration
       run: |
         [ -e files ] && mv files openwrt/files
@@ -79,9 +79,10 @@ jobs:
         cd openwrt
         ../$DIY_SH
         make defconfig
+        
     - name: SSH connection to Actions
       uses: P3TERX/debugger-action@master
-      if: env.SSH_ACTIONS == 'true'
+      if: env.SSH_ACTIONS == 'true' || contains(github.event.action, 'ssh')
 
     - name: Download package
       id: package
