@@ -13,7 +13,7 @@ on:
     types: [published]
   push:
     branches: 
-      - master
+      - main
     paths:
       - '.config'
   schedule:
@@ -43,7 +43,7 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@master
+      uses: actions/checkout@main
 
     - name: Initialization environment
       env:
@@ -85,7 +85,7 @@ jobs:
         make defconfig
 
     - name: SSH connection to Actions
-      uses: P3TERX/debugger-action@master
+      uses: P3TERX/debugger-action@main
       if: env.SSH_ACTIONS == 'true'
 
     - name: Download package
@@ -105,28 +105,28 @@ jobs:
         echo "::set-output name=status::success"
 
     - name: Upload Config
-      uses: actions/upload-artifact@master
+      uses: actions/upload-artifact@main
       if: steps.compile.outputs.status == 'success'
       with:
         name: config.seed
         path: openwrt/bin/targets/${{ env.TARGET }}/${{ env.SUBTARGET }}/config.seed
         
     - name: Upload Packages
-      uses: actions/upload-artifact@master
+      uses: actions/upload-artifact@main
       if: steps.compile.outputs.status == 'success'
       with:
         name: packages
         path: openwrt/bin/packages
         
     - name: Upload Combined DVD Image
-      uses: actions/upload-artifact@master
+      uses: actions/upload-artifact@main
       if: steps.compile.outputs.status == 'success'
       with:
         name: ${{ env.DEVICE }}-combined-squashfs.img.gz
         path: openwrt/bin/targets/${{ env.TARGET }}/${{ env.SUBTARGET }}/${{ env.DEVICE }}-combined-squashfs.img.gz
         
     - name: Upload Combined VMware Image
-      uses: actions/upload-artifact@master
+      uses: actions/upload-artifact@main
       if: steps.compile.outputs.status == 'success'
       with:
         name: ${{ env.DEVICE }}-combined-squashfs.vmdk
@@ -146,7 +146,7 @@ jobs:
         sed -i '/Download/G' $DOWNLOAD_URL_FILE
 
     - name: Upload Download Url File
-      uses: actions/upload-artifact@master
+      uses: actions/upload-artifact@main
       if: steps.compile.outputs.status == 'success' && env.UPLOAD_TMP_LINK == 'true'
       with:
         name: ${{ env.DOWNLOAD_URL_FILE }}
