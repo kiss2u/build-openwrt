@@ -20,9 +20,7 @@ on:
         default: 'false'
         
   schedule:
-    - cron: 0 16 * * 5
-  watch:
-    types: [started]        
+    - cron: 0 16 * * 5        
 
 env:
   REPO_URL: https://github.com/project-openwrt/openwrt
@@ -41,7 +39,6 @@ env:
 jobs:
   build:
     runs-on: ubuntu-18.04
-    if: github.event.repository.owner.id == github.event.sender.id
 
     steps:
     - name: Checkout
