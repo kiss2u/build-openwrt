@@ -21,7 +21,7 @@ env:
   REPO_URL: https://github.com/project-openwrt/openwrt
   REPO_BRANCH: openwrt-18.06
   CONFIG_FILE: .config4019
-  DIY_SH: diy.sh
+  DIY_SH: scripts/diy.sh
   IPV6MOD_IN_FIRMWARE: flase
   KMODS_IN_FIRMWARE: false
   UPLOAD_RCLONE: flase
