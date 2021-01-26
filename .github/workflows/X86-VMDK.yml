@@ -20,7 +20,6 @@ on:
     - cron: 0 16 * * 5
   watch:
     types: [started]
-    repository_dispatch:
   workflow_dispatch:
 
 env:
