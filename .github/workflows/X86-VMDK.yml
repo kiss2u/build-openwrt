@@ -31,7 +31,7 @@ env:
   TZ: Asia/Shanghai
   TARGET: x86
   SUBTARGET: 64
-  DEVICE: openwrt-x86-64
+  DEVICE: immortalwrt-x86-64
   FREE_UP_DISK: true
   SSH_ACTIONS: false
   UPLOAD_TMP_LINK: true
