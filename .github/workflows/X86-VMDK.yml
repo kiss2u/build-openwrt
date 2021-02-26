@@ -110,7 +110,7 @@ jobs:
       if: steps.compile.outputs.status == 'success'
       with:
         name: config.seed
-        path: openwrt/bin/targets/${{ env.TARGET }}/${{ env.SUBTARGET }}/config.seed
+        path: openwrt/bin/targets/${{ env.TARGET }}/${{ env.SUBTARGET }}/config.buildinfo
         
     - name: Upload Packages
       uses: actions/upload-artifact@main
