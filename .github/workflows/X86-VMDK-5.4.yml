@@ -15,7 +15,7 @@ on:
     branches: 
       - main
     paths:
-      - '.config'
+      - '.configK54'
   schedule:
     - cron: 0 16 * * 5
   watch:
