@@ -15,7 +15,7 @@ on:
     branches: 
       - main
     paths:
-      - '.configK54'
+      - '.config'
   schedule:
     - cron: 0 16 * * 5
   watch:
@@ -23,9 +23,9 @@ on:
   workflow_dispatch:
 
 env:
-  REPO_URL: https://github.com/project-openwrt/openwrt
+  REPO_URL: https://github.com/immortalwrt
   REPO_BRANCH: openwrt-18.06-k5.4
-  CONFIG_FILE: .config
+  CONFIG_FILE: .configk54
   DIY_SH: diy.sh
   DOWNLOAD_URL_FILE: Tmp-Link-Url.txt
   TZ: Asia/Shanghai
@@ -39,7 +39,7 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     timeout-minutes: 720
 
     steps:
@@ -52,7 +52,7 @@ jobs:
       run: |
         sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
         sudo -E apt-get -qq update
-        sudo -E apt-get -qq install $(curl -fsSL git.io/depends-ubuntu-1804)
+        sudo -E apt-get -qq install $(curl -fsSL git.io/depends-ubuntu-2004)
         
     - name: Free up disk space
       if: env.FREE_UP_DISK == 'true'
