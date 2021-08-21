@@ -10,6 +10,10 @@ CONFIG_DEFAULT_kmod-usb3=y
 # CONFIG_PACKAGE_kmod-usb-uhci=y
 # CONFIG_PACKAGE_kmod-usb2=y
 
+# CONFIG_PACKAGE_luci-app-adguardhome_INCLUDE_binary is not set
+# CONFIG_PACKAGE_adguardhome is not set
+# CONFIG_ADGUARDHOME_COMPRESS_GOPROXY is not set
+# CONFIG_ADGUARDHOME_COMPRESS_UPX is not set
 CONFIG_PACKAGE_openssh-sftp-server=y
 CONFIG_PACKAGE_acme-dnsapi=y
 # CONFIG_PACKAGE_kmod-nls-cp936=y
